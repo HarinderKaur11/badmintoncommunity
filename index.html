@@ -10,6 +10,8 @@
 			padding: 0;
 			margin: 20px 0 0 0;
 			}
+			
+			/* Sizing of the map */
 			#map {
 				width: 100%;
 				min-height: 100%;
@@ -19,7 +21,6 @@
 	<body>
 		
 		<div id="map">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 			<script>
 				function initMap() {
 
@@ -33,9 +34,10 @@
 					// Sport Places API End Point					
 					var url = 'https://sportplaces-api.herokuapp.com/api/v1/places?origin=-73.4718,45.4717&radius=99&sports=132'
 
-					// Add the markets automatically
+					// Add the markers automatically
 					map.data.loadGeoJson(url);
 					
+					// Declaring places as an Array
 					var places = [];
 					
 					// API Call
@@ -45,10 +47,10 @@
 						dataType: 'JSON',
 						data: {},
 						success: function(data) {
-							initInfoWindowsToMarkers(data.features)
+							initInfoWindowsToMarkers(data.features);
 						},
 						error: function(err) {
-							console.log('error:' + err)
+							console.log('error:' + err);
 						}
 					})
 					
@@ -56,17 +58,18 @@
 					function initInfoWindowsToMarkers (places) {
 						var placesObjects = places
 						
-						// Loop on all sport places retrieved
-						//						
+						// Loop on all sport places retrieved					
 						for (i = 0; i < placesObjects.length; i++){
 							createInfoWindow();
 						}
-
+						
+						// Creation of the Info Window(s)
 						function createInfoWindow () {
 							
 							// Initiatize an empty marker
 							var infowindow = new google.maps.InfoWindow({content: 'Loading...'});
-								
+							
+							// Click event on a marker to show Info Window
 							map.data.addListener('click', function(event) {
 									var myHTML = constructHTMLPopUp(event.feature.f);
 								    infowindow.setContent(myHTML);
@@ -75,18 +78,24 @@
 								    infowindow.open(map);
 								});
 							}
-
+							
 						function constructHTMLPopUp(sportPlace) {
+							
+							// Insert information of each Sport Place to each markers Info Window
 							var HtmlString = '<div id="content" style="width:150px;">'+
 												'<div id="siteNotice">'+
 												'</div>'+
-												'<h1 id="placeHeading" class="placeHeading">' + sportPlace.name + '</h1>'+
+												'<h3 id="placeHeading" class="placeHeading">' + sportPlace.name + '</h3>'+
 												'<div id="bodyContent">'+
-														'<p>Phone: 450-679-6131 ' +
-																'Address: 550 Boulevard Curé-Poirier Ouest, Longueuil '+
-																'Québec, Canada '+
-																'J4J 2H6'+
-																'Website: <a href="complexesportiflongueuil.com/en/home/complexesportiflongueuil.com/en/home">complexesportiflongueuil.com/en/home/</a></p>'+
+														'<p>' + sportPlace.contact_details.email + ' ' +
+																sportPlace.contact_details.phone + ' '+
+																sportPlace.contact_details.website + ' '+
+																sportPlace.contact_details.booking_url + ' '+
+																sportPlace.contact_details.facebook_username + ' ' +
+																sportPlace.address_components.address + '' +
+																sportPlace.address_components.city + ' ' +
+																sportPlace.address_components.province + ' ' +
+																sportPlace.address_components.country +
 														'</div>'+
 												'</div>';
 							return HtmlString;
@@ -94,10 +103,12 @@
 					}
 				}
 				</script>
+				<!-- async attribute allows the browser to continue to render the rest of the page while the API loads -->
 				<script async defer
 					src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB88gtQGJZeD3uJ_74estIOyyIhR0Oq2TY&callback=initMap">
 				</script>
-				
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 			</div>
+
 		</body>
 	</html>

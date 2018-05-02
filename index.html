@@ -18,18 +18,21 @@
 				function initMap() {
 					var location = {lat: 45.4717, lng: -73.4718};
 					var map = new google.maps.Map(document.getElementById('map'), {
-						zoom: 4,
+						zoom: 11,
 						center: location
 					});
-					var marker = new google.maps.Marker({
-						position: location,
-						map: map
-					});
+//					var marker = new google.maps.Marker({
+//						position: location,
+//						map: map
+//					});
+					map.data.loadGeoJson('https://sportplaces-api.herokuapp.com/api/v1/places?origin=-73.4718,45.4717&radius=99&sports=132')
 				}
+					
 			</script>
-			 <script async defer
+			<script async defer
 				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB88gtQGJZeD3uJ_74estIOyyIhR0Oq2TY&callback=initMap">
 			</script>
+			
 		</div>
 	</body>
 </html>

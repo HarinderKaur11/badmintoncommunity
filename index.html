@@ -6,7 +6,7 @@
 		<style>
 			#map {
 				width: 100%;
-				height: 400px;
+				height: 500px;
 			}
 		</style>
 	</head>
@@ -14,6 +14,8 @@
 		<h3>Badminton Community</h3>
 		
 		<div id="map">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 			<script>
 				function initMap() {
 					var location = {lat: 45.4717, lng: -73.4718};
@@ -25,7 +27,70 @@
 //						position: location,
 //						map: map
 //					});
-					map.data.loadGeoJson('https://sportplaces-api.herokuapp.com/api/v1/places?origin=-73.4718,45.4717&radius=99&sports=132')
+					
+					var url = 'https://sportplaces-api.herokuapp.com/api/v1/places?origin=-73.4718,45.4717&radius=99&sports=132'
+					map.data.loadGeoJson(url)
+					
+					var places 
+					
+					$.ajax({
+						url: url,
+						method: 'GET',
+						dataType: 'JSON',
+						data: {},
+						success: function(data) {
+							createIwContent(data.features)
+							
+						},
+						error: function(err) {
+							console.log('error:' + err)
+						}
+					})
+					
+					
+					function createIwContent (places) {
+						var placesObjects = places
+						console.log(placesObjects)
+						
+						for (i = 0; i < placesObjects.length; i++){
+							var contentString = '<div id="content">'+
+										'<div id="siteNotice">'+
+										'</div>'+
+										'<h1 id="placeHeading" class="placeHeading">' + placesObjects[i].properties.name + '</h1>'+
+										'<div id="bodyContent">'+
+										'<p>Phone: 450-679-6131 ' +
+										'Address: 550 Boulevard Curé-Poirier Ouest, Longueuil '+
+										'Québec, Canada '+
+										'J4J 2H6'+
+										'Website: <a href="complexesportiflongueuil.com/en/home/complexesportiflongueuil.com/en/home">complexesportiflongueuil.com/en/home/</a></p>'+
+										'</div>'+
+										'</div>';
+						}
+	
+						createInfoWindow(contentString)
+					}
+					
+					function createInfoWindow (iwContent) {
+						var infowindow = new google.maps.InfoWindow({
+							content: iwContent
+						});
+							
+						map.data.addListener('click', function(event) {
+								infowindow.setContent('<div style="width:50px;">' + event.feature.getProperty('htmlContent') + '</div>');
+								infowindow.setOptions({
+									pixelOffset: new google.maps.Size(0, -36)
+								});
+								infowindow.setPosition(event.feature.getGeometry().get());
+								infowindow.open(map);
+								google.maps.event.addListenerOnce(infowindow, 'domready', function() {
+									infowindow.close();
+									infowindow.open(map);
+								});
+							});
+						
+						
+					}	
+					createInfoWindow()
 				}
 					
 			</script>

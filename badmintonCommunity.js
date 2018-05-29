@@ -4,9 +4,6 @@ var startLat = 45.4717;
 var startLong = -73.4718;
 var map;
 
-console.log(startLat);
-console.log(startLong);
-
 // Allows to get the users location
 document.getElementById("FindMe").onclick = function userLocation() {
 	getUserGeolocation();
@@ -19,17 +16,18 @@ function getUserGeolocation() {
 	}
 }
 
+// Sets the map center to the current user location
 function getLocationSuccess(position) {
-	console.log(position);
 	map.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
 }
 
+// Pops up the alert window if location access is denied
 function getLocationFailed(error) {
-	console.log("Location access denied. " + error.message);
+	alert(("Location access denied. " + error.message)
 }
 
+// Creates and initialises the map
 function initMap() {
-
 	// Set the center of the map to Décathlon Brossard or users location
 	var location = { lat: startLat, lng: startLong };
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -60,7 +58,7 @@ function initMap() {
 		}
 	})
 
-
+	// Initialises the info window to the markers
 	function initInfoWindowsToMarkers(places) {
 		var placesObjects = places
 
@@ -86,7 +84,7 @@ function initMap() {
 		}
 
 		function constructHTMLPopUp(sportPlace) {
-
+			
 			// Insert information of each Sport Place to each markers Info Window
 			var HtmlString = '<div id="content" style="width:150px;">' +
 				'<div id="siteNotice">' +
